@@ -2,8 +2,19 @@ import React from 'react'
 import { Table, Badge } from '../../components/ui/Badge'
 import { ScoreBadge } from '../../components/score/ScoreBadge'
 import { Button } from '../../components/ui/Button'
-
-export function LeadTable({ leads = [], onSelectLead, onClaimLead, currentUserId }) {
+import {
+  VerificationChips,
+  VerifyEmailButton
+} from '../../components/verification/VerificationChips'
+export function LeadTable({
+  leads = [],
+  onSelectLead,
+  onClaimLead,
+  currentUserId,
+  verificationResults = {},
+  onVerifyEmail,
+  onVerificationError
+}) {
   const headers = [
     'Organization',
     'Role Title',
@@ -58,15 +69,35 @@ export function LeadTable({ leads = [], onSelectLead, onClaimLead, currentUserId
                 {lead.status.replace('_', ' ')}
               </span>
             </td>
-            <td style={{ padding: '12px 16px', fontSize: '13px' }}>
-              {isClaimedByMe ? (
-                <Badge variant="success">Assigned to You</Badge>
-              ) : isClaimedByOther ? (
-                <span style={{ color: 'var(--color-text-muted)' }}>Claimed</span>
-              ) : (
-                <span style={{ color: 'var(--color-text-light)' }}>Unassigned</span>
-              )}
-            </td>
+            <td
+  style={{ padding: '12px 16px' }}
+  onClick={(e) => e.stopPropagation()}
+>
+  {!lead.assigned_to && onClaimLead && (
+    <Button
+      variant="secondary"
+      onClick={() => onClaimLead(lead.id)}
+      style={{ fontSize: '12px', padding: '4px 8px' }}
+    >
+      Claim
+    </Button>
+  )}
+
+  <div style={{ marginTop: 8 }}>
+    <VerifyEmailButton
+      leadId={lead.id}
+      onVerify={onVerifyEmail}
+      onError={onVerificationError}
+    />
+  </div>
+
+  <div style={{ marginTop: 8 }}>
+    <VerificationChips
+      status={verificationResults[lead.id]?.status || 'unknown'}
+      verifiedAt={verificationResults[lead.id]?.verifiedAt || null}
+    />
+  </div>
+</td>
             <td style={{ padding: '12px 16px' }} onClick={(e) => e.stopPropagation()}>
               {!lead.assigned_to && onClaimLead && (
                 <Button

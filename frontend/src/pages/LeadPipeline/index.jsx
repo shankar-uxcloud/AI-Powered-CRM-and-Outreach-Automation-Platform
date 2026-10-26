@@ -5,6 +5,10 @@ import { Button } from '../../components/ui/Button'
 import { Spinner, EmptyState, ErrorBanner } from '../../components/feedback/Spinner'
 import { apiClient } from '../../api/client'
 import { MOCK_LEADS } from '../../mocks/sampleLeads'
+import {
+  VerificationChips,
+  VerifyEmailButton
+} from '../../components/verification/VerificationChips'
 
 export default function LeadPipelinePage({ currentUser }) {
   const [leads, setLeads] = useState([])
@@ -13,7 +17,7 @@ export default function LeadPipelinePage({ currentUser }) {
   const [search, setSearch] = useState('')
   const [scoreBand, setScoreBand] = useState('all')
   const [selectedLead, setSelectedLead] = useState(null)
-
+  const [verificationResults, setVerificationResults] = useState({})
   async function fetchLeads() {
     setLoading(true)
     setError(null)
@@ -46,7 +50,26 @@ export default function LeadPipelinePage({ currentUser }) {
       )
     }
   }
+  async function handleVerifyEmail({ leadId }) {
+    const result = await apiClient(
+      `/leads/${encodeURIComponent(leadId)}/verify`,
+      { method: 'POST' }
+    )
 
+    setVerificationResults((prev) => ({
+      ...prev,
+      [leadId]: {
+        status: result.result || 'unknown',
+        verifiedAt: result.checked_at || null
+      }
+    }))
+
+    return result
+  }
+
+  function handleVerificationError(err) {
+    setError(err.message || 'Email verification failed. Please try again.')
+  }
   const filteredLeads = leads.filter((lead) => {
     const matchesSearch =
       !search ||
@@ -118,11 +141,14 @@ export default function LeadPipelinePage({ currentUser }) {
         />
       ) : (
         <LeadTable
-          leads={filteredLeads}
-          currentUserId={currentUser?.id}
-          onClaimLead={handleClaimLead}
-          onSelectLead={(lead) => setSelectedLead(lead)}
-        />
+  leads={filteredLeads}
+  currentUserId={currentUser?.id}
+  onClaimLead={handleClaimLead}
+  onSelectLead={(lead) => setSelectedLead(lead)}
+  verificationResults={verificationResults}
+  onVerifyEmail={handleVerifyEmail}
+  onVerificationError={handleVerificationError}
+/>
       )}
 
       {/* Quick Detail Drawer / Modal Preview */}
