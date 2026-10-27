@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 
 const VERIFICATION_STATUSES = {
   deliverable: {
@@ -21,6 +20,11 @@ const VERIFICATION_STATUSES = {
     label: 'Risky',
     description: 'Email may have delivery risks',
     variant: 'warning'
+  },
+  not_configured: {
+    label: 'Not configured',
+    description: 'Email verification service is not configured',
+    variant: 'neutral'
   },
   unknown: {
     label: 'Unknown',
@@ -252,17 +256,21 @@ export function VerifyEmailButton({
             : 'Verify Email'}
       </button>
 
-      <span role="status" aria-live="polite" style={{
-        position: 'absolute',
-        width: 1,
-        height: 1,
-        padding: 0,
-        margin: -1,
-        overflow: 'hidden',
-        clip: 'rect(0, 0, 0, 0)',
-        whiteSpace: 'nowrap',
-        border: 0
-      }}>
+      <span
+        role="status"
+        aria-live="polite"
+        style={{
+          position: 'absolute',
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: 'hidden',
+          clip: 'rect(0, 0, 0, 0)',
+          whiteSpace: 'nowrap',
+          border: 0
+        }}
+      >
         {loading ? 'Email verification in progress' : ''}
       </span>
     </>

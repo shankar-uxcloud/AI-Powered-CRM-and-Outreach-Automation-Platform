@@ -5,11 +5,6 @@ import { Button } from '../../components/ui/Button'
 import { Spinner, EmptyState, ErrorBanner } from '../../components/feedback/Spinner'
 import { apiClient } from '../../api/client'
 import { MOCK_LEADS } from '../../mocks/sampleLeads'
-import {
-  VerificationChips,
-  VerifyEmailButton
-} from '../../components/verification/VerificationChips'
-
 export default function LeadPipelinePage({ currentUser }) {
   const [leads, setLeads] = useState([])
   const [loading, setLoading] = useState(true)
@@ -185,3 +180,4 @@ export default function LeadPipelinePage({ currentUser }) {
     </div>
   )
 }
+
