@@ -17,8 +17,7 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8000)
     SECRET_KEY: str = Field(default="default-insecure-secret-key-change-in-production-min-32-chars")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=60)
-    CORS_ORIGINS: str = Field(default="http://localhost:5173,http://localhost:3000")
-
+    CORS_ORIGINS: str = Field(default="http://localhost:5173,http://localhost:5174,http://localhost:3000")
     # Database Configuration (Neon PostgreSQL)
     DATABASE_URL: str = Field(
         default="postgresql://crm_user:password@localhost:5432/crm_db",
