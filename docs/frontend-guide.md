@@ -88,3 +88,31 @@ Colors, score bands, and radii are defined in `src/styles/tokens.css`:
 3. Do not modify `package.json` — if you need a library, open a **Library Request** issue.
 4. Always test keyboard accessibility (tab focus, Escape key to close modals).
 5. Attach a screenshot or video recording to your Pull Request!
+
+---
+
+## 6. FE-23: Campaign Approval Screen
+
+- **Component**: `frontend/src/pages/CampaignManager/Approval.jsx`
+- **Route**: `/campaigns/approval`
+- **Purpose**: Pre-send human-in-the-loop audit screen that enforces deliverability verification, subject/body validity, suppression checks, and send limit enforcement prior to locking content for dispatch.
+
+### Pre-Send Checklist Validation
+1. **Recipient Deliverability**: Verifies deliverability status is strictly `deliverable`. Risky, catch-all, undeliverable, or unknown statuses fail.
+2. **Subject Validity**: Enforces non-empty string and 1..80 character limit matching the `AIDraftOutput` contract.
+3. **Body Validity**: Enforces non-empty message body.
+4. **Suppression Check**: Validates recipient email and domain against `GET /suppression`.
+5. **Daily Send Limit**: Verifies quota availability (`remaining = dailyLimit - sentToday > 0`).
+
+### Content Locking (`POST /approvals`)
+- Calls `POST /approvals` with `{ draft_id, approved: true, edited_subject, edited_body }`.
+- On server confirmation, stores the immutable SHA-256 `content_hash` and renders the preview in a locked, read-only state.
+- Dispatches are never triggered automatically (human approval only).
+
+### Known Architectural Blockers
+1. **Approval Revocation Not Supported in Backend API**:
+   - `database/migrations/005_campaigns_drafts_approvals.sql` defines a `revoked_at` column, but `backend/app/api/v1/approvals.py` and `contracts/openapi.yaml` do not expose a revocation route (e.g. `DELETE /approvals/{id}`).
+   - The UI correctly catches this and reports it as a blocker rather than simulating fake persistent revocation.
+2. **Missing Upstream Prerequisite FE-22**:
+   - Official FE-22 (`DraftEditor.jsx`) is not yet completed in the upstream integration branch.
+   - `Approval.jsx` accepts `{ draftId, recipient, subject, body }` via props or router state to facilitate clean plug-and-play integration as soon as official FE-22 is merged.
