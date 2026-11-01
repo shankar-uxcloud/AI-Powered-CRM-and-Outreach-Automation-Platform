@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { LeadTable } from '../LeadPipeline/LeadTable'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
@@ -13,29 +12,33 @@ export default function MyLeadsPage({ currentUser }) {
   const [error, setError] = useState(null)
   const [search, setSearch] = useState('')
 
-  async function fetchMyLeads() {
+  const userId = currentUser?.id
+
+  const fetchMyLeads = useCallback(async () => {
     setLoading(true)
     setError(null)
 
     try {
       const data = await apiClient('/leads')
       const allLeads = data.items || data
+
       setLeads(allLeads.filter(
-        lead => lead.assigned_to === currentUser?.id
+        lead => lead.assigned_to === userId
       ))
     } catch (err) {
       console.warn('Using sample leads:', err)
+
       setLeads(MOCK_LEADS.filter(
-        lead => lead.assigned_to === currentUser?.id
+        lead => lead.assigned_to === userId
       ))
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     fetchMyLeads()
-  }, [currentUser?.id])
+  }, [fetchMyLeads])
 
   const filteredLeads = leads.filter(lead =>
     lead.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -84,7 +87,7 @@ export default function MyLeadsPage({ currentUser }) {
       ) : (
         <LeadTable
           leads={filteredLeads}
-          currentUserId={currentUser?.id}
+          currentUserId={userId}
         />
       )}
     </div>
