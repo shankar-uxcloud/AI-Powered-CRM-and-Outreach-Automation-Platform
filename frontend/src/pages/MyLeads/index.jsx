@@ -22,15 +22,15 @@ export default function MyLeadsPage({ currentUser }) {
       const data = await apiClient('/leads')
       const allLeads = data.items || data
 
-      setLeads(allLeads.filter(
-        lead => lead.assigned_to === userId
-      ))
+      setLeads(
+        allLeads.filter(lead => lead.assigned_to === userId)
+      )
     } catch (err) {
       console.warn('Using sample leads:', err)
 
-      setLeads(MOCK_LEADS.filter(
-        lead => lead.assigned_to === userId
-      ))
+      setLeads(
+        MOCK_LEADS.filter(lead => lead.assigned_to === userId)
+      )
     } finally {
       setLoading(false)
     }
@@ -46,11 +46,26 @@ export default function MyLeadsPage({ currentUser }) {
   )
 
   return (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div style={{
+      padding: '24px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '20px'
+    }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: 700 }}>My Assigned Leads</h1>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: 700 }}>
+            My Assigned Leads
+          </h1>
+
+          <p style={{
+            fontSize: '13px',
+            color: 'var(--color-text-muted)'
+          }}>
             View and manage opportunities assigned to you.
           </p>
         </div>
@@ -73,10 +88,19 @@ export default function MyLeadsPage({ currentUser }) {
         />
       </div>
 
-      {error && <ErrorBanner message={error} onRetry={fetchMyLeads} />}
+      {error && (
+        <ErrorBanner
+          message={error}
+          onRetry={fetchMyLeads}
+        />
+      )}
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '48px' }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '48px'
+        }}>
           <Spinner size={32} />
         </div>
       ) : filteredLeads.length === 0 ? (
