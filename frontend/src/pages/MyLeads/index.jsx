@@ -2,7 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { LeadTable } from '../LeadPipeline/LeadTable'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
-import { Spinner, EmptyState, ErrorBanner } from '../../components/feedback/Spinner'
+import {
+  Spinner,
+  EmptyState,
+  ErrorBanner
+} from '../../components/feedback/Spinner'
 import { apiClient } from '../../api/client'
 import { MOCK_LEADS } from '../../mocks/sampleLeads'
 
@@ -40,32 +44,44 @@ export default function MyLeadsPage({ currentUser }) {
     fetchMyLeads()
   }, [fetchMyLeads])
 
-  const filteredLeads = leads.filter(lead =>
-    lead.title.toLowerCase().includes(search.toLowerCase()) ||
-    lead.organization_name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredLeads = leads.filter(lead => {
+    const title = (lead.title || '').toLowerCase()
+    const organization = (lead.organization_name || '').toLowerCase()
+    const searchText = search.toLowerCase()
+
+    return (
+      title.includes(searchText) ||
+      organization.includes(searchText)
+    )
+  })
 
   return (
-    <div style={{
-      padding: '24px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '20px'
-    }}>
-      <div style={{
+    <div
+      style={{
+        padding: '24px',
         display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
+        flexDirection: 'column',
+        gap: '20px'
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 700 }}>
             My Assigned Leads
           </h1>
 
-          <p style={{
-            fontSize: '13px',
-            color: 'var(--color-text-muted)'
-          }}>
+          <p
+            style={{
+              fontSize: '13px',
+              color: 'var(--color-text-muted)'
+            }}
+          >
             View and manage opportunities assigned to you.
           </p>
         </div>
@@ -75,12 +91,14 @@ export default function MyLeadsPage({ currentUser }) {
         </Button>
       </div>
 
-      <div style={{
-        backgroundColor: 'var(--color-bg-surface)',
-        padding: '16px',
-        borderRadius: 'var(--radius-md)',
-        border: '1px solid var(--color-border)'
-      }}>
+      <div
+        style={{
+          backgroundColor: 'var(--color-bg-surface)',
+          padding: '16px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--color-border)'
+        }}
+      >
         <Input
           placeholder="Search company or job title..."
           value={search}
@@ -96,11 +114,13 @@ export default function MyLeadsPage({ currentUser }) {
       )}
 
       {loading ? (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '48px'
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '48px'
+          }}
+        >
           <Spinner size={32} />
         </div>
       ) : filteredLeads.length === 0 ? (
