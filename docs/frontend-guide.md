@@ -1,90 +1,174 @@
-# Frontend Developer Guide
+# Frontend User Guide – AI CRM Platform
 
-Welcome to the frontend team! This guide covers everything you need to know to build, test, and ship components and pages for the CRM dashboard.
+## 1. Introduction
 
----
+The AI CRM Platform helps users discover, review, claim, and manage job leads through a simple dashboard.
 
-## 1. Tech Stack & Key Choices
+This guide explains the frontend screens, their purpose, user roles, and how to use the available features.
 
-- **Build Tool**: Vite (fast HMR, lightweight output)
-- **Framework**: React 18+
-- **Styling**: Standard CSS with Design Tokens (`tokens.css`, `global.css`). No bloated CSS frameworks.
-- **Mocking**: MSW (Mock Service Worker) & fixtures so you can build complete features without waiting for backend APIs.
-- **Testing**: Vitest + React Testing Library.
+## 2. User Roles
 
----
+The platform supports four user roles:
 
-## 2. Directory Structure
+- **Admin:** Manages and monitors the platform.
+- **Researcher:** Reviews job leads and claims leads for further work.
+- **Campaign Manager:** Works with campaign-related features.
+- **Developer:** Accesses developer-related features and system information.
 
-```
-frontend/
-├── package.json          # (LEAD-ONLY) Root dependencies
-├── vite.config.js        # Vite config with proxy settings
-├── public/
-│   └── _redirects        # Cloudflare Pages SPA routing rewrite rules
-└── src/
-    ├── main.jsx          # Entry point
-    ├── App.jsx           # Router & layout provider
-    ├── styles/
-    │   ├── tokens.css    # Design tokens (colors, spacing, score bands)
-    │   └── global.css    # Reset and typography
-    ├── api/
-    │   ├── client.js     # Shared fetch wrapper (JWT, X-Correlation-ID, error handling)
-    │   └── leads.js      # Leads API client
-    ├── mocks/
-    │   ├── handlers.js   # MSW mock handlers
-    │   └── sampleLeads.js# Fake leads fixture
-    ├── components/
-    │   ├── ui/           # Button, Input, Modal, Table, Badge
-    │   ├── layout/       # Sidebar, Header
-    │   ├── score/        # ScoreBadge
-    │   ├── verification/ # VerificationStatusChip
-    │   └── feedback/     # Spinner, EmptyState, ErrorBanner
-    └── pages/
-        ├── _Kitchen/     # Component kit showcase / test harness
-        ├── Login/
-        ├── LeadPipeline/ # Main CRM table & Kanban
-        ├── MyLeads/      # Assigned / claimed leads
-        ├── EnrichmentQueue/
-        ├── CampaignManager/
-        ├── Suppression/
-        ├── SystemHealth/
-        └── ErrorCenter/
-```
+## 3. Login
 
----
+**Purpose:** Allows users to access the CRM dashboard.
 
-## 3. Getting Started Locally
+**How to use:**
+1. Open the CRM application.
+2. Enter your login details.
+3. Click the Login button.
+4. After successful login, the dashboard opens.
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+Screenshot: Login screen.
 
-The application will be running at `http://localhost:5173`.
-By default, `VITE_USE_MOCKS=true` in `.env`, allowing you to develop fully offline against mock data.
+## 4. Lead Pipeline
 
----
+**Purpose:** Displays available job leads collected from different sources.
 
-## 4. UI Kit & The Kitchen Sink Demo (`/_Kitchen`)
+**Intended users:** Researcher and Admin.
 
-Whenever you build or test a UI component (`Button`, `Input`, `Modal`, `Badge`, `Table`), always add its variants to `src/pages/_Kitchen/index.jsx`.
-This serves as our live design system gallery.
+**Main information displayed:**
+- Organization
+- Role Title
+- Source
+- Experience
+- Quality Score
+- Status
+- Assigned To
+- Actions
 
-### Design Tokens
-Colors, score bands, and radii are defined in `src/styles/tokens.css`:
-- High Confidence: `var(--color-score-high)` (Green)
-- Medium Confidence: `var(--color-score-medium)` (Amber)
-- Low Confidence: `var(--color-score-low)` (Red)
-- Primary Accent: `var(--color-primary)`
+**How to use:**
+1. Open Lead Pipeline.
+2. Review the available job leads.
+3. Check the organization, role, experience, and quality score.
+4. Click Claim to take responsibility for an unassigned lead.
+5. The claimed lead becomes assigned to your account.
 
----
+Screenshot: Lead Pipeline screen.
 
-## 5. Working Rules Reminder for Frontend Interns
+## 5. My Leads
 
-1. Check your assigned Task ID in the [Tasksheet](tasksheet.md) (e.g. `FE-04`, `FE-09`).
-2. Only edit files assigned to your ticket.
-3. Do not modify `package.json` — if you need a library, open a **Library Request** issue.
-4. Always test keyboard accessibility (tab focus, Escape key to close modals).
-5. Attach a screenshot or video recording to your Pull Request!
+**Purpose:** Displays the leads claimed or assigned to the logged-in user.
+
+**Intended user:** Researcher.
+
+**How to use:**
+1. Claim an unassigned lead from Lead Pipeline.
+2. Open My Leads.
+3. Find the claimed lead.
+4. Check its assignment status.
+
+Example: A claimed lead can appear with the status "Assigned to You".
+
+Screenshot: My Leads screen.
+
+## 6. Contact Enrichment Queue
+
+**Purpose:** Helps manage manual recruiter contact lookup tasks.
+
+**Intended users:** Researcher and Admin.
+
+**How to use:**
+1. Open Enrichment Queue.
+2. Enter a company or lead name.
+3. Select a provider, such as ContactOut or Snov.io.
+4. Click Add to Queue.
+5. View the task under Enrichment Tasks.
+6. Use Mark Completed to update its displayed status.
+
+Note: The tested demo interface adds tasks locally. It does not perform a real provider lookup.
+
+Screenshot: Enrichment Queue screen.
+
+## 7. Campaign Manager
+
+**Purpose:** Provides access to campaign-related activities.
+
+**Intended user:** Campaign Manager.
+
+Screenshot: Campaign Manager screen.
+
+## 8. Suppression
+
+**Purpose:** Provides access to suppression-related information and controls.
+
+**Intended user:** Admin.
+
+Screenshot: Suppression screen.
+
+## 9. System Health
+
+**Purpose:** Provides access to system health and status information.
+
+**Intended users:** Admin and Developer.
+
+Screenshot: System Health screen.
+
+## 10. Error Center
+
+**Purpose:** Provides access to application error information.
+
+**Intended users:** Admin and Developer.
+
+Screenshot: Error Center screen.
+
+## 11. Admin
+
+**Purpose:** Provides administration options for managing and monitoring the platform.
+
+**Intended user:** Admin.
+
+Screenshot: Admin screen.
+
+## 12. Complete Lead Workflow
+
+A Researcher can follow these steps:
+
+1. Log in to the CRM as a Researcher.
+2. Open Lead Pipeline.
+3. Review available job leads.
+4. Click Claim on an unassigned lead.
+5. Open My Leads.
+6. Verify that the claimed lead appears under the logged-in user's account.
+7. Open Enrichment Queue if a manual contact lookup task is required.
+
+## 13. Conclusion
+
+The AI CRM frontend provides a dashboard for users to access features based on their roles. The Lead Pipeline and My Leads screens support the lead discovery and claiming workflow, while other screens provide access to campaign, enrichment, administration, and system-related features.
+
+## 1.Admin Screenshots
+![admin settings](admin-settings.png.png)
+![Campaign manager](campaign-manager.png.png) 
+![Enrichment Queue](enrichment-queue.png.png) 
+![Error Center](error-center.png.png) 
+![Lead Pipeline](lead-pipeline.png.png) 
+![Login](Login.png.png) 
+![My Leads](my-leads.png.png) 
+![Suppression List](suppression-list.png.png) 
+![System Health](system-health.png.png)
+
+## 2.Campaign Manager Screenshots
+![Campaign](campaign-manager-campaigns.png.png) 
+![Lead Pipeline](campaign-manager-lead-pipeline.png.png) 
+![Login](campaign-manager-login.png) 
+![Supression List](campaign-manager-suppression-list.png.png)
+
+## 3.Developer Screenshots
+![Developer Login](<Developer login page.png>) 
+![Developer Error center](<Developer-error center.png>) 
+![Developer Lead Pipeline](<Developer-lead pipeline.png>) 
+![Developer System Health](<Developer-system health.png>)
+
+## 4.Reasearcher Screenshots
+![Enrichment Queue](03-enrichment-queue.png) 
+![My Assigned Leads](my-assigned-leads.png.png) 
+![Researcher Login](<researcher login.png>) 
+![Researcher Enrichment Queue](researcher-enrichment-queue.png.png) 
+![Researcher Lead Pipeline](researcher-lead-pipeline.png.png) 
+![Researcher My Leads](researcher-my-leads.png.png)
