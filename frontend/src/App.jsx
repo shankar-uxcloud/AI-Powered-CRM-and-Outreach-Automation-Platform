@@ -1,9 +1,12 @@
+
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Sidebar } from './components/layout/Sidebar'
 import { Header } from './components/layout/Header'
 import LoginPage from './pages/Login/index'
 import LeadPipelinePage from './pages/LeadPipeline/index'
+import EnrichmentQueuePage from './pages/EnrichmentQueue/index'
+import MyLeadsPage from './pages/MyLeads/index'
 import KitchenSinkPage from './pages/_Kitchen/index'
 
 function PlaceholderPage({ title, description, roleRequirement }) {
@@ -24,6 +27,7 @@ function PlaceholderPage({ title, description, roleRequirement }) {
 
 function MainLayout({ user, onLogout, children }) {
   const location = useLocation()
+
   if (location.pathname === '/login') {
     return children
   }
@@ -45,6 +49,7 @@ export default function App() {
 
   useEffect(() => {
     const savedUser = localStorage.getItem('auth_user')
+
     if (savedUser) {
       try {
         setCurrentUser(JSON.parse(savedUser))
@@ -52,6 +57,7 @@ export default function App() {
         localStorage.removeItem('auth_user')
       }
     }
+
     setLoading(false)
   }, [])
 
@@ -77,6 +83,7 @@ export default function App() {
               )
             }
           />
+
           <Route
             path="/pipeline"
             element={
@@ -87,38 +94,31 @@ export default function App() {
               )
             }
           />
-          <Route
-            path="/kitchen"
-            element={<KitchenSinkPage />}
-          />
+
+          <Route path="/kitchen" element={<KitchenSinkPage />} />
+
           <Route
             path="/my-leads"
             element={
               currentUser ? (
-                <PlaceholderPage
-                  title="My Assigned Leads (FE-14)"
-                  description="Review and manage fresher opportunities claimed by or assigned to you."
-                  roleRequirement="researcher, admin"
-                />
+                <MyLeadsPage currentUser={currentUser} />
               ) : (
                 <Navigate to="/login" replace />
               )
             }
           />
+
           <Route
             path="/enrichment"
             element={
               currentUser ? (
-                <PlaceholderPage
-                  title="Contact Enrichment Queue (FE-16)"
-                  description="Manual credit-governed recruiter lookups using ContactOut and Snov.io."
-                  roleRequirement="researcher, admin"
-                />
+                <EnrichmentQueuePage />
               ) : (
                 <Navigate to="/login" replace />
               )
             }
           />
+
           <Route
             path="/campaigns"
             element={
@@ -133,6 +133,7 @@ export default function App() {
               )
             }
           />
+
           <Route
             path="/suppression"
             element={
@@ -147,6 +148,7 @@ export default function App() {
               )
             }
           />
+
           <Route
             path="/system-health"
             element={
@@ -161,6 +163,7 @@ export default function App() {
               )
             }
           />
+
           <Route
             path="/error-center"
             element={
@@ -175,6 +178,7 @@ export default function App() {
               )
             }
           />
+
           <Route
             path="/admin"
             element={
@@ -189,7 +193,9 @@ export default function App() {
               )
             }
           />
+
           <Route path="/" element={<Navigate to="/pipeline" replace />} />
+
           <Route
             path="*"
             element={
@@ -206,4 +212,3 @@ export default function App() {
     </BrowserRouter>
   )
 }
-
