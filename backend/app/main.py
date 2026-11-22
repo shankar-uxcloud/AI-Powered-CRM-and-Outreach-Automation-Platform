@@ -19,7 +19,7 @@ from backend.app.api.v1.approvals import router as approvals_router
 from backend.app.api.v1.suppression import router as suppression_router
 from backend.app.api.v1.webhooks import router as webhooks_router
 from backend.app.api.v1.error_center import router as error_center_router
-
+from backend.app.api.v1.contacts import router as contacts_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -57,6 +57,7 @@ def create_application() -> FastAPI:
     app.include_router(health_router, prefix=api_v1_prefix)
     app.include_router(auth_router, prefix=api_v1_prefix)
     app.include_router(leads_router, prefix=api_v1_prefix)
+    app.include_router(contacts_router, prefix=api_v1_prefix)
     app.include_router(enrichment_router, prefix=api_v1_prefix)
     app.include_router(verification_router, prefix=api_v1_prefix)
     app.include_router(campaigns_router, prefix=api_v1_prefix)
